@@ -23,6 +23,7 @@ function addLocalAudio() {
 };
 
 function addLocalData() {
+    // Creates a Local Data Track
     var localDataTrack = new Twilio.Video.LocalDataTrack();
     dataTrack = localDataTrack;
 };
@@ -123,17 +124,14 @@ function participantDisconnected(participant) {
     updateParticipantCount();
 };
 
-//function attachDataTrack
 function trackSubscribed(div, track) {
-  console.log("Inside this "+ track.kind);
   if (track.kind === 'data') {
-    console.log(track + " "+ track.sid);
+    // Registering addToRemoteDataLabel(...) event handler Remote Data Track receive
     track.on('message', data => {
         addToRemoteDataLabel(JSON.parse(data).emojiData, track.sid);
     });
-    // Attaching the data track to a label
+    // Attaching the data track to a display label
     attachRemoteDataTrack(div,track);
-
   }else{
     div.appendChild(track.attach());
   }
@@ -155,15 +153,6 @@ function attachRemoteDataTrack(div,track) {
     dataDiv.setAttribute('class', "emoji");
     div.appendChild(dataDiv);
 };
-
-
-
-function addToLocalDataLabel(newText)
-{
-    let localDataLabel = document.getElementById("datalocal");
-    localDataLabel.innerHTML = newText;
-    animateDataLabel(localDataLabel, "appear");
-}
 
 function addToRemoteDataLabel(newText, dataTrackSID)
 {
@@ -196,18 +185,19 @@ function emojiButtonHandler(event){
     sendDataToRoom(emojiText);
 }
 
+function addToLocalDataLabel(newText)
+{
+    let localDataLabel = document.getElementById("datalocal");
+    localDataLabel.innerHTML = newText;
+    animateDataLabel(localDataLabel, "appear");
+}
+
 function sendDataToRoom(data)
 {
     dataTrack.send(JSON.stringify({
         emojiData: data
       }));
 }
-
-
-
-
-
-
 
 addLocalVideo();
 addLocalAudio();
