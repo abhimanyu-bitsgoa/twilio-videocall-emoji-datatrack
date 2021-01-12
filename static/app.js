@@ -6,19 +6,12 @@ const count = document.getElementById('count');
 let room;
 let dataTrack;
 let videoTrack;
-let audioTrack;
 
 function addLocalVideo() {
     Twilio.Video.createLocalVideoTrack().then(track => {
         let video = document.getElementById('local').firstChild;
         videoTrack = track;
         video.appendChild(track.attach());
-    });
-};
-
-function addLocalAudio() {
-    Twilio.Video.createLocalAudioTrack().then(track => {
-        audioTrack = track;
     });
 };
 
@@ -62,9 +55,11 @@ function connect(username) {
             body: JSON.stringify({'username': username})
         }).then(res => res.json()).then(data => {
             // join video call
-            return Twilio.Video.connect(data.token, {tracks: [dataTrack, videoTrack, audioTrack]});
+            return Twilio.Video.connect(data.token);
         }).then(_room => {
             room = _room;
+            // Publishing the local Data Track to the Room
+            room.localParticipant.publishTrack(dataTrack);
             room.participants.forEach(participantConnected);
             room.on('participantConnected', participantConnected);
             room.on('participantDisconnected', participantDisconnected);
@@ -200,7 +195,6 @@ function sendDataToRoom(data)
 }
 
 addLocalVideo();
-addLocalAudio();
 addLocalData();
 activateEmojiButtons();
 button.addEventListener('click', connectButtonHandler);
