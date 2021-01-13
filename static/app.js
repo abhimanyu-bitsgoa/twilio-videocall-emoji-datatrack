@@ -3,14 +3,11 @@ const usernameInput = document.getElementById('username');
 const button = document.getElementById('join_leave');
 const container = document.getElementById('container');
 const count = document.getElementById('count');
-let room;
-let dataTrack;
-let videoTrack;
-
+let room, dataTrack;
+// No change from Base Application
 function addLocalVideo() {
     Twilio.Video.createLocalVideoTrack().then(track => {
         let video = document.getElementById('local').firstChild;
-        videoTrack = track;
         video.appendChild(track.attach());
     });
 };
@@ -20,7 +17,7 @@ function addLocalData() {
     var localDataTrack = new Twilio.Video.LocalDataTrack();
     dataTrack = localDataTrack;
 };
-
+// No change from Base Application
 function connectButtonHandler(event) {
     event.preventDefault();
     if (!connected) {
@@ -72,7 +69,7 @@ function connect(username) {
     });
     return promise;
 };
-
+// No change from Base Application
 function disconnect() {
     room.disconnect();
     while (container.lastChild.id != 'local')
@@ -81,7 +78,7 @@ function disconnect() {
     connected = false;
     updateParticipantCount();
 };
-
+// No change from Base Application
 function updateParticipantCount() {
     if (!connected)
         count.innerHTML = 'Disconnected.';
@@ -99,7 +96,7 @@ function participantConnected(participant) {
 
     let labelDiv = document.createElement('div');
     labelDiv.innerHTML = participant.identity;
-    labelDiv.setAttribute('class', 'nameLabel');
+    labelDiv.setAttribute('class', 'nameLabel'); // Add formatting to name of participant
     participantDiv.appendChild(labelDiv);
 
     container.appendChild(participantDiv);
@@ -113,7 +110,7 @@ function participantConnected(participant) {
 
     updateParticipantCount();
 };
-
+// No change
 function participantDisconnected(participant) {
     document.getElementById(participant.sid).remove();
     updateParticipantCount();
