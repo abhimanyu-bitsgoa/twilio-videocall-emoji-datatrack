@@ -27,30 +27,25 @@
   background-color: #ebebeb;
   border-style: dotted;
 }
-
 .emoji {
   position: absolute;
   font-size:30px;
-  opacity: 0;
   top: 8px;
   left: 8px;
+  opacity: 0;
   transition:all 1s ease;
 }
-
 .emojibuttons {
   margin: auto;
   font-size: 20px;
 }
-
 .emojiPanel {
     padding-top: 25px;
     display: flex;
     flex-wrap: wrap;
     text-align:center;
 }
-
-.appear
-{
+.appear{
    -webkit-transform: scale(1.3);
    -ms-transform: scale(1.3);
     transform: scale(1.3);

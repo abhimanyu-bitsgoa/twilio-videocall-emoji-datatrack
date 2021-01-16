@@ -1,10 +1,10 @@
-let connected = false;
 const usernameInput = document.getElementById('username');
 const button = document.getElementById('join_leave');
 const container = document.getElementById('container');
 const count = document.getElementById('count');
+let connected = false;
 let room, dataTrack;
-// No change from Base Application
+
 function addLocalVideo() {
     Twilio.Video.createLocalVideoTrack().then(track => {
         let video = document.getElementById('local').firstChild;
@@ -12,12 +12,6 @@ function addLocalVideo() {
     });
 };
 
-function addLocalData() {
-    // Creates a Local Data Track
-    var localDataTrack = new Twilio.Video.LocalDataTrack();
-    dataTrack = localDataTrack;
-};
-// No change from Base Application
 function connectButtonHandler(event) {
     event.preventDefault();
     if (!connected) {
@@ -69,21 +63,18 @@ function connect(username) {
     });
     return promise;
 };
-// No change from Base Application
-function disconnect() {
-    room.disconnect();
-    while (container.lastChild.id != 'local')
-        container.removeChild(container.lastChild);
-    button.innerHTML = 'Join call';
-    connected = false;
-    updateParticipantCount();
-};
-// No change from Base Application
+
 function updateParticipantCount() {
     if (!connected)
         count.innerHTML = 'Disconnected.';
     else
         count.innerHTML = (room.participants.size + 1) + ' participants online.';
+};
+
+function addLocalData() {
+    // Creates a Local Data Track
+    var localDataTrack = new Twilio.Video.LocalDataTrack();
+    dataTrack = localDataTrack;
 };
 
 function participantConnected(participant) {
@@ -96,7 +87,8 @@ function participantConnected(participant) {
 
     let labelDiv = document.createElement('div');
     labelDiv.innerHTML = participant.identity;
-    labelDiv.setAttribute('class', 'nameLabel'); // Add formatting to name of participant
+    // Add formatting to name of participant
+    labelDiv.setAttribute('class', 'nameLabel');
     participantDiv.appendChild(labelDiv);
 
     container.appendChild(participantDiv);
@@ -110,7 +102,7 @@ function participantConnected(participant) {
 
     updateParticipantCount();
 };
-// No change
+
 function participantDisconnected(participant) {
     document.getElementById(participant.sid).remove();
     updateParticipantCount();
@@ -139,25 +131,14 @@ function trackUnsubscribed(track) {
     }
 };
 
-function attachRemoteDataTrack(div,track) {
-    let dataDiv = document.createElement('div');
-    dataDiv.setAttribute('id', track.sid);
-    dataDiv.setAttribute('class', "emoji");
-    div.appendChild(dataDiv);
+function disconnect() {
+    room.disconnect();
+    while (container.lastChild.id != 'local')
+        container.removeChild(container.lastChild);
+    button.innerHTML = 'Join call';
+    connected = false;
+    updateParticipantCount();
 };
-
-function addToRemoteDataLabel(newText, dataTrackSID)
-{
-    let remoteDataLabel = document.getElementById(dataTrackSID);
-    remoteDataLabel.innerHTML = newText;
-    animateDataLabel(remoteDataLabel, "appear");
-}
-
-function animateDataLabel(div, startClass)
-{
-    setTimeout(function(){ div.classList.remove(startClass); }, 1000);
-    div.classList.add(startClass);
-}
 
 function activateEmojiButtons()
 {
@@ -177,15 +158,31 @@ function emojiButtonHandler(event){
     sendDataToRoom(emojiText);
 }
 
-function addToLocalDataLabel(newText)
-{
+function addToLocalDataLabel(newText){
     let localDataLabel = document.getElementById("datalocal");
     localDataLabel.innerHTML = newText;
     animateDataLabel(localDataLabel, "appear");
 }
 
-function sendDataToRoom(data)
-{
+function attachRemoteDataTrack(div,track) {
+    let dataDiv = document.createElement('div');
+    dataDiv.setAttribute('id', track.sid);
+    dataDiv.setAttribute('class', "emoji");
+    div.appendChild(dataDiv);
+};
+
+function addToRemoteDataLabel(newText, dataTrackSID){
+    let remoteDataLabel = document.getElementById(dataTrackSID);
+    remoteDataLabel.innerHTML = newText;
+    animateDataLabel(remoteDataLabel, "appear");
+}
+
+function animateDataLabel(div, startClass){
+    setTimeout(function(){ div.classList.remove(startClass); }, 1000);
+    div.classList.add(startClass);
+}
+
+function sendDataToRoom(data){
     dataTrack.send(JSON.stringify({
         emojiData: data
       }));
